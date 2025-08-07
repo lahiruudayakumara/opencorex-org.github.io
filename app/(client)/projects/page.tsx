@@ -3,8 +3,6 @@ import { Github, Rocket } from "lucide-react";
 import Link from "next/link";
 
 export default function Projects() {
-  const primaryColor = "#8D153A";
-
   const projects = [
     {
       title: "OpenHealth",
@@ -12,8 +10,8 @@ export default function Projects() {
         "A platform for sharing and collaborating on health-related open-source projects.",
       status: "Active",
       tech: ["Go", "Healthcare", "Open Source"],
-      projectLink: "https://openhealth.org",
-      githubLink: "https://github.com/OpenHealth",
+      projectLink: "#",
+      githubLink: "#",
     },
     {
       title: "BackStem",
@@ -21,13 +19,12 @@ export default function Projects() {
         "TypeScript backend framework for building scalable applications.",
       status: "Private",
       tech: ["Typescript", "Framework"],
-      projectLink: "https://backstem.com",
-      githubLink: "https://github.com/BackStem",
+      projectLink: "#",
+      githubLink: "#",
     },
     {
       title: "React Helmet Pro",
-      description:
-        "React Helmet Pro is a powerful tool for managing document head in React applications.",
+      description: "React Helmet Pro manages the document head in React apps.",
       status: "Active",
       tech: ["React", "Typescript", "Seo"],
       projectLink: "https://www.npmjs.com/package/react-helmet-pro",
@@ -37,12 +34,10 @@ export default function Projects() {
   return (
     <div className="max-w-6xl mx-auto px-6 py-12">
       <div className="text-center mb-16">
-                      <div
-                className="inline-flex items-center px-4 py-2 border-[#8D153A] border-2 rounded-full text-sm font-semibold mb-6 text-[#8D153A]"
-              >
-                <Rocket className="w-4 h-4 mr-2" />
-                Projects
-              </div>
+        <div className="inline-flex items-center px-4 py-2 border-[#8D153A] border-2 rounded-full text-sm font-semibold mb-6 text-[#8D153A]">
+          <Rocket className="w-4 h-4 mr-2" />
+          Projects
+        </div>
         <p className="text-xl text-gray-600">
           Innovative solutions built by and for the developer community
         </p>
@@ -56,7 +51,9 @@ export default function Projects() {
           >
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-semibold">{project.title}</h3>
+                <h3 className="text-xl font-semibold text-[#8D153A]">
+                  {project.title}
+                </h3>
                 <span
                   className={`px-3 py-1 rounded-full text-sm font-medium ${
                     project.status === "Active"
@@ -70,7 +67,7 @@ export default function Projects() {
                 </span>
               </div>
               <p className="text-gray-600 mb-6">{project.description}</p>
-              <div className="flex flex-wrap gap-2 mb-6">
+              <div className="flex flex-wrap gap-2 mb-6 mt-auto">
                 {project.tech.map((tech, j) => (
                   <span
                     key={j}
@@ -81,14 +78,19 @@ export default function Projects() {
                 ))}
               </div>
               <div className="flex gap-3">
-                <Link href={project.projectLink} target="_blank" className="flex-1 py-2 px-4 text-white rounded-lg font-medium hover:opacity-90 transition-opacity bg-[#8D153A] cursor-pointer text-center">
-                    View Project
+                <Link
+                  href={project.projectLink}
+                  target="_blank"
+                  className="flex-1 py-2 px-4 text-white rounded-lg font-medium hover:opacity-90 transition-opacity bg-[#8D153A] cursor-pointer text-center"
+                >
+                  View Project
                 </Link>
-                <Link href={project.githubLink} target="_blank" className="p-2 border rounded-lg hover:bg-gray-50 transition-colors border-[#8D153A]">
-                    <Github
-                      className="w-5 h-5"
-                      style={{ color: primaryColor }}
-                    />
+                <Link
+                  href={project.githubLink}
+                  target="_blank"
+                  className="p-2 border rounded-lg hover:bg-gray-50 transition-colors border-[#8D153A]"
+                >
+                  <Github className="w-5 h-5 text-[#8D153A]" />
                 </Link>
               </div>
             </div>
