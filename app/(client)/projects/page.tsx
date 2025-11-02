@@ -1,4 +1,4 @@
-import { Github, Rocket } from "lucide-react";
+import { Book, Github, Rocket } from "lucide-react";
 
 import Link from "next/link";
 
@@ -84,6 +84,13 @@ export default function Projects() {
                   className="flex-1 py-2 px-4 text-white rounded-lg font-medium hover:opacity-90 transition-opacity bg-[#8D153A] cursor-pointer text-center"
                 >
                   View Project
+                </Link>
+                <Link
+                  href={project.githubLink}
+                  target="_blank"
+                  className="p-2 border rounded-lg hover:bg-gray-50 transition-colors border-[#8D153A]"
+                >
+                  <Book className="w-5 h-5 text-[#8D153A]" />
                 </Link>
                 <Link
                   href={project.githubLink}
