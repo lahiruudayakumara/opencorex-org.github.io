@@ -1,6 +1,7 @@
 export const siteLinks = {
   home: "/",
   projects: "/projects",
+  tools: "/tools",
   contribute: "/contribute",
   team: "/team",
   about: "/about",

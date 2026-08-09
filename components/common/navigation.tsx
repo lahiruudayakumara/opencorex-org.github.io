@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, BookText, Home, Info, Layers3, Menu, Users, X } from "lucide-react";
+import { ArrowUpRight, BookText, Home, Info, Layers3, Menu, Users, Wrench, X } from "lucide-react";
 import { useState } from "react";
 
 import Image from "next/image";
@@ -12,6 +12,7 @@ import { siteLinks } from "@/lib/site-content";
 const navItems = [
   { href: siteLinks.home, label: "Home", icon: Home },
   { href: siteLinks.projects, label: "Projects", icon: Layers3 },
+  { href: siteLinks.tools, label: "Tools", icon: Wrench },
   { href: siteLinks.contribute, label: "Contribute", icon: Users },
   { href: siteLinks.team, label: "Team", icon: Users },
   { href: siteLinks.about, label: "About", icon: Info },
