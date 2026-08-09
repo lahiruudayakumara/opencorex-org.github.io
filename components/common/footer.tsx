@@ -34,7 +34,7 @@ const Footer = () => {
               href={siteLinks.discord}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-start gap-3 rounded-[1.4rem] border border-[var(--line)] bg-[var(--surface)] p-4 transition hover:bg-[var(--surface-strong)] hover:border-[var(--brand)]"
+              className="flex items-start gap-3 rounded-[1.4rem] border border-[var(--line)] bg-[var(--surface)] p-4 transition hover:bg-[var(--surface-strong)]"
             >
               <MessageCircle className="mt-0.5 h-5 w-5 text-[var(--brand)]" />
               <div>
@@ -46,7 +46,7 @@ const Footer = () => {
             </a>
             <a
               href={siteLinks.security}
-              className="flex items-start gap-3 rounded-[1.4rem] border border-[var(--line)] bg-[var(--surface)] p-4 transition hover:bg-[var(--surface-strong)] hover:border-[var(--brand)]"
+              className="flex items-start gap-3 rounded-[1.4rem] border border-[var(--line)] bg-[var(--surface)] p-4 transition hover:bg-[var(--surface-strong)]"
             >
               <Shield className="mt-0.5 h-5 w-5 text-[var(--brand)]" />
               <div>

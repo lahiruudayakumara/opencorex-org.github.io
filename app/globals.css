@@ -15,7 +15,6 @@
   --surface-strong: #f1f5f9;
   --line: #e2e8f0;
   --line-strong: #cbd5e1;
-  --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
 }
 
 @theme inline {
@@ -55,7 +54,6 @@ a {
 .panel {
   background: var(--surface);
   border: 1px solid var(--line);
-  box-shadow: var(--shadow);
 }
 
 .panel-muted {
@@ -66,13 +64,11 @@ a {
 .panel-strong {
   background: var(--surface-strong);
   border: 1px solid var(--line);
-  box-shadow: var(--shadow);
 }
 
 .panel-brand {
   background: var(--brand);
   border: 1px solid var(--brand-deep);
-  box-shadow: 0 20px 40px rgba(141, 21, 58, 0.2);
   color: #ffffff;
 }
 

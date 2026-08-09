@@ -745,7 +745,7 @@ export default function QRCodeGenerator() {
                     {THEMES.map((t) => (
                       <button key={t.id} onClick={() => setThemeId(t.id)}
                         className={`group relative flex flex-col items-center gap-2 rounded-xl border p-3 transition ${
-                          themeId === t.id ? "border-[var(--brand)] bg-[var(--brand-soft)]" : "border-[var(--line)] hover:border-[var(--line-strong)]"
+                          themeId === t.id ? "border-[var(--brand)] bg-[var(--brand-soft)]" : "border-[var(--line)]"
                         }`}>
                         {/* swatch */}
                         <div className="flex h-9 w-full overflow-hidden rounded-lg border border-[rgba(255,255,255,0.1)]">
@@ -810,7 +810,7 @@ export default function QRCodeGenerator() {
                               ? "border-[var(--brand)] bg-[var(--brand-soft)] text-[var(--foreground)]"
                               : lockedByLogo
                                 ? "cursor-not-allowed border-[var(--line)] text-[var(--muted)] opacity-30"
-                                : "border-[var(--line)] text-[var(--muted)] hover:border-[var(--line-strong)]"
+                                : "border-[var(--line)] text-[var(--muted)]"
                           }`}>
                           <span className="text-base font-bold">{level}</span>
                           <span className="text-[0.6rem]">{desc[level]}</span>
@@ -837,7 +837,7 @@ export default function QRCodeGenerator() {
                     {FRAMES.map((f) => (
                       <button key={f.id} onClick={() => setFrame(f.id)}
                         className={`flex flex-col items-center gap-2 rounded-xl border p-3.5 transition ${
-                          frame === f.id ? "border-[var(--brand)] bg-[var(--brand-soft)]" : "border-[var(--line)] hover:border-[var(--line-strong)]"
+                          frame === f.id ? "border-[var(--brand)] bg-[var(--brand-soft)]" : "border-[var(--line)]"
                         }`}>
                         <FrameIcon type={f.id} color={frame === f.id ? "#8D153A" : "#888"} />
                         <span className={`text-xs font-medium ${frame === f.id ? "text-[var(--foreground)]" : "text-[var(--muted)]"}`}>{f.label}</span>
@@ -869,7 +869,7 @@ export default function QRCodeGenerator() {
           <div className="flex items-center justify-between"><p className="text-[0.63rem] font-bold uppercase tracking-widest text-[var(--muted)]">Live preview</p><span className="rounded-full bg-emerald-500/10 px-2 py-1 text-[.6rem] font-bold text-emerald-400">LOCAL ONLY</span></div>
 
           {/* QR image */}
-          <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-2xl bg-white shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+          <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-2xl border border-[var(--line)] bg-white">
             {generating && (
               <div className="absolute inset-0 flex items-center justify-center bg-white/80 backdrop-blur-sm">
                 <RefreshCw className="h-6 w-6 animate-spin text-gray-400" />
@@ -903,7 +903,7 @@ export default function QRCodeGenerator() {
                     <p className="text-[0.65rem] text-[var(--muted)]">Use H error correction</p>
                   </div>
                   <button onClick={() => { setLogo(null); if (logoInputRef.current) logoInputRef.current.value = ""; }}
-                    className="flex h-7 w-7 items-center justify-center rounded-lg border border-[var(--line)] text-[var(--muted)] transition hover:border-red-500/50 hover:text-red-400">
+                    className="flex h-7 w-7 items-center justify-center rounded-lg border border-[var(--line)] text-[var(--muted)] transition hover:text-red-400">
                     <Trash2 className="h-3.5 w-3.5" />
                   </button>
                 </div>
@@ -918,7 +918,7 @@ export default function QRCodeGenerator() {
                 </div>
               </div>
             ) : (
-              <label className="flex cursor-pointer flex-col items-center gap-2 rounded-xl border border-dashed border-[var(--line)] p-4 text-center transition hover:border-[var(--brand)] hover:bg-[var(--brand-soft)]">
+              <label className="flex cursor-pointer flex-col items-center gap-2 rounded-xl border border-dashed border-[var(--line)] p-4 text-center transition hover:bg-[var(--brand-soft)]">
                 <ImageIcon className="h-5 w-5 text-[var(--muted)]" />
                 <span className="text-xs text-[var(--muted)]">Click to upload logo</span>
                 <input ref={logoInputRef} type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />

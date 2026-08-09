@@ -74,7 +74,7 @@ const CookieConsent = () => {
   }
 
   return (
-    <div className="fixed inset-x-4 bottom-4 z-50 mx-auto w-auto max-w-3xl rounded-[1.75rem] border border-[var(--line-strong)] bg-[var(--surface-strong)] p-5 shadow-2xl backdrop-blur">
+    <div className="fixed inset-x-4 bottom-4 z-50 mx-auto w-auto max-w-3xl rounded-[1.75rem] border border-[var(--line-strong)] bg-[var(--surface-strong)] p-5 backdrop-blur">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="max-w-2xl">
           <p className="eyebrow">
