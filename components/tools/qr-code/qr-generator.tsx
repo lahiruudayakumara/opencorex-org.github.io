@@ -648,7 +648,7 @@ export default function QRCodeGenerator() {
         <Link href="/tools" className="mb-4 inline-flex items-center gap-2 text-sm text-[var(--muted)] transition hover:text-[var(--foreground)]">
           <ArrowLeft className="h-4 w-4" /> Back to Tools
         </Link>
-        <div className="mt-2 flex flex-col gap-4 rounded-[2rem] border border-[var(--line)] bg-gradient-to-br from-[var(--surface-strong)] to-[rgba(141,21,58,.13)] p-6 sm:flex-row sm:items-center sm:p-8">
+        <div className="mt-2 flex flex-col gap-4 rounded-[2rem] border border-[var(--line)] bg-[var(--surface-strong)] p-6 sm:flex-row sm:items-center sm:p-8">
           <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-[rgba(141,21,58,0.3)] bg-[var(--brand-soft)]">
             <QrCode className="h-5 w-5 text-[var(--brand)]" />
           </div>

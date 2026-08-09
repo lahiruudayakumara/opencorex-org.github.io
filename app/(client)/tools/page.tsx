@@ -81,7 +81,7 @@ export default function ToolsPage() {
                 </p>
 
                 {/* CTA */}
-                <div className="mt-5 flex items-center gap-1.5 text-sm font-semibold text-[var(--foreground)] transition-colors duration-150 group-hover:text-white">
+                <div className="mt-5 flex items-center gap-1.5 text-sm font-semibold text-[var(--foreground)] transition-colors duration-150 group-hover:text-[var(--brand)]">
                   Open tool
                   {tool.external ? <ExternalLink className="h-4 w-4" /> : <ArrowRight className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-1" />}
                 </div>
@@ -89,7 +89,7 @@ export default function ToolsPage() {
                 {/* Bottom accent line */}
                 <div
                   className="absolute bottom-0 left-6 right-6 h-[2px] rounded-full opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-                  style={{ background: `linear-gradient(90deg, ${tool.accent}, transparent)` }}
+                  style={{ backgroundColor: tool.accent }}
                 />
               </Link>
             );
