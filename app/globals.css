@@ -98,6 +98,7 @@ a {
   font-size: 0.95rem;
   font-weight: 700;
   line-height: 1;
+  cursor: pointer;
   transition:
     transform 160ms ease,
     background-color 160ms ease,
