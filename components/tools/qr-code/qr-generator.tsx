@@ -2,8 +2,10 @@
 
 import {
   AlignLeft,
+  AlertTriangle,
   ArrowLeft,
   Building2,
+  CalendarDays,
   Check,
   Copy,
   CreditCard,
@@ -12,10 +14,14 @@ import {
   FileText,
   Globe,
   Image as ImageIcon,
+  Mail,
+  MapPin,
+  MessageSquare,
   type LucideIcon,
   Palette,
   QrCode,
   RefreshCw,
+  RotateCcw,
   Share2,
   Smartphone,
   Square,
@@ -24,6 +30,7 @@ import {
   Utensils,
   Video,
   Wifi,
+  Zap,
 } from "lucide-react";
 import Link from "next/link";
 import QRCode from "qrcode";
@@ -36,7 +43,7 @@ import { useEffect, useRef, useState } from "react";
 type QRTypeId =
   | "url" | "vcard" | "pdf" | "images" | "social"
   | "video" | "text" | "business" | "facebook"
-  | "wifi" | "app" | "menu";
+  | "wifi" | "app" | "menu" | "email" | "sms" | "event" | "location";
 
 type FrameType = "none" | "simple" | "rounded" | "scan-me" | "corners" | "badge";
 type TabId = "content" | "style" | "frame";
@@ -91,6 +98,10 @@ const QR_TYPES: QRTypeDef[] = [
   { id: "wifi",     label: "Wi-Fi",          description: "Connect to a wireless network",             icon: Wifi,      accent: "#06B6D4" },
   { id: "app",      label: "App",            description: "Link to the iOS App Store / Google Play",  icon: Smartphone,accent: "#10B981" },
   { id: "menu",     label: "Menu",           description: "Create a digital restaurant menu",          icon: Utensils,  accent: "#F59E0B" },
+  { id: "email",    label: "Email",          description: "Open a pre-filled email message",              icon: Mail,       accent: "#0EA5E9" },
+  { id: "sms",      label: "SMS",            description: "Open a pre-filled text message",               icon: MessageSquare, accent: "#22C55E" },
+  { id: "event",    label: "Calendar Event", description: "Add an event directly to a calendar",          icon: CalendarDays, accent: "#8B5CF6" },
+  { id: "location", label: "Map Location",   description: "Open exact coordinates in a maps application", icon: MapPin,     accent: "#F43F5E" },
 ];
 
 /* ══════════════════════════════════════════════════════════
@@ -115,6 +126,10 @@ type FormValues = {
   wifi_type: "WPA" | "WEP" | "nopass"; wifi_hidden: boolean;
   app_ios: string; app_android: string;
   menu_url: string;
+  email_to: string; email_subject: string; email_body: string;
+  sms_phone: string; sms_body: string;
+  event_title: string; event_start: string; event_end: string; event_location: string; event_description: string;
+  location_lat: string; location_lng: string; location_label: string;
 };
 
 const DEFAULTS: FormValues = {
@@ -135,6 +150,10 @@ const DEFAULTS: FormValues = {
   wifi_type: "WPA", wifi_hidden: false,
   app_ios: "", app_android: "",
   menu_url: "",
+  email_to: "", email_subject: "", email_body: "",
+  sms_phone: "", sms_body: "",
+  event_title: "", event_start: "", event_end: "", event_location: "", event_description: "",
+  location_lat: "", location_lng: "", location_label: "",
 };
 
 /* ══════════════════════════════════════════════════════════
@@ -170,6 +189,10 @@ function buildQRData(type: QRTypeId, v: FormValues): string {
       ? `${v.app_ios.trim()}\n${v.app_android.trim()}`
       : v.app_ios.trim() || v.app_android.trim() || "https://apps.apple.com/";
     case "menu":     return v.menu_url.trim() || "https://example.com/menu";
+    case "email":    return `mailto:${v.email_to}?subject=${encodeURIComponent(v.email_subject)}&body=${encodeURIComponent(v.email_body)}`;
+    case "sms":      return `SMSTO:${v.sms_phone}:${v.sms_body}`;
+    case "event": { const dt=(s:string)=>s.replace(/[-:]/g,"").replace("T","")+"00"; return ["BEGIN:VEVENT",`SUMMARY:${esc(v.event_title)}`,`DTSTART:${dt(v.event_start)}`,`DTEND:${dt(v.event_end)}`,`LOCATION:${esc(v.event_location)}`,`DESCRIPTION:${esc(v.event_description)}`,"END:VEVENT"].join("\n"); }
+    case "location": return `geo:${v.location_lat},${v.location_lng}?q=${v.location_lat},${v.location_lng}(${encodeURIComponent(v.location_label)})`;
   }
 }
 
@@ -474,6 +497,10 @@ function FormFields({
       </div>
     );
     case "menu": return <div className="space-y-4">{inp("menu_url", "https://myrestaurant.com/menu", "Menu URL", "url")}</div>;
+    case "email": return <div className="space-y-4">{inp("email_to","hello@example.com","Recipient","email")}{inp("email_subject","Project enquiry","Subject")}<Field label="Message"><textarea className={`${inputCls} min-h-28`} value={values.email_body} onChange={e=>onChange("email_body",e.target.value)}/></Field></div>;
+    case "sms": return <div className="space-y-4">{inp("sms_phone","+94770000000","Phone number","tel")}<Field label="Message"><textarea className={`${inputCls} min-h-28`} value={values.sms_body} onChange={e=>onChange("sms_body",e.target.value)}/></Field></div>;
+    case "event": return <div className="space-y-4">{inp("event_title","Community meetup","Event title")}<div className="grid grid-cols-2 gap-3">{inp("event_start","","Starts","datetime-local")}{inp("event_end","","Ends","datetime-local")}</div>{inp("event_location","Colombo","Location")}<Field label="Description"><textarea className={`${inputCls} min-h-24`} value={values.event_description} onChange={e=>onChange("event_description",e.target.value)}/></Field></div>;
+    case "location": return <div className="space-y-4"><div className="grid grid-cols-2 gap-3">{inp("location_lat","6.9271","Latitude","number")}{inp("location_lng","79.8612","Longitude","number")}</div>{inp("location_label","OpenCorex event","Location label")}</div>;
   }
 }
 
@@ -511,6 +538,8 @@ export default function QRCodeGenerator() {
 
   /* ── Style ── */
   const [themeId, setThemeId]         = useState("classic");
+  const [customDark, setCustomDark]   = useState("#111827");
+  const [customLight, setCustomLight] = useState("#ffffff");
   const [qrSize, setQrSize]           = useState(280);
   const [ec, setEc]                   = useState<ECLevel>("M");
 
@@ -529,11 +558,14 @@ export default function QRCodeGenerator() {
   const [generating, setGenerating] = useState(false);
   const [copied, setCopied]     = useState(false);
   const [copiedImg, setCopiedImg] = useState(false);
+  const [exportSize, setExportSize] = useState(1024);
 
   /* ── UI ── */
   const [activeTab, setActiveTab] = useState<TabId>("content");
 
-  const theme = THEMES.find((t) => t.id === themeId)!;
+  const theme = themeId === "custom"
+    ? { id: "custom", name: "Custom", dark: customDark, light: customLight }
+    : THEMES.find((t) => t.id === themeId)!;
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   /* ── Generate QR (debounced) ── */
@@ -550,7 +582,7 @@ export default function QRCodeGenerator() {
     }, 320);
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeType, values, themeId, qrSize, ec, frame, frameLabel, frameSubLabel, logo, logoSize]);
+  }, [activeType, values, themeId, customDark, customLight, qrSize, ec, frame, frameLabel, frameSubLabel, logo, logoSize]);
 
   const handleChange = (k: keyof FormValues, v: string | boolean) =>
     setValues((p) => ({ ...p, [k]: v }));
@@ -569,12 +601,16 @@ export default function QRCodeGenerator() {
   };
 
   /* ── Download ── */
-  const handleDownload = () => {
-    if (!qrDataUrl) return;
+  const handleDownload = async () => {
     const a = document.createElement("a");
-    a.href = qrDataUrl;
+    a.href = await renderQR({ data: buildQRData(activeType, values), theme, size: exportSize, ec, frame, frameLabel, frameSubLabel, logo, logoSize });
     a.download = `opencorex-qr-${activeType}.png`;
     a.click();
+  };
+
+  const resetDesign = () => {
+    setThemeId("classic"); setQrSize(280); setEc("M"); setFrame("none");
+    setFrameLabel("SCAN ME"); setFrameSubLabel(""); setLogo(null); setLogoSize(22);
   };
 
   /* ── Copy data string ── */
@@ -597,6 +633,11 @@ export default function QRCodeGenerator() {
   };
 
   const activeTypeDef = QR_TYPES.find((t) => t.id === activeType)!;
+  const encodedData = buildQRData(activeType, values);
+  const urlTypes: QRTypeId[] = ["url", "pdf", "images", "social", "video", "facebook", "menu"];
+  const rawUrl = activeType === "url" ? values.url : activeType === "pdf" ? values.pdf_url : activeType === "images" ? values.images_url : activeType === "social" ? values.social_url : activeType === "video" ? values.video_url : activeType === "facebook" ? values.facebook_url : activeType === "menu" ? values.menu_url : "";
+  const invalidUrl = urlTypes.includes(activeType) && !!rawUrl && !/^https?:\/\//i.test(rawUrl);
+  const density = encodedData.length > 800 ? "Very dense" : encodedData.length > 350 ? "Dense" : encodedData.length > 120 ? "Moderate" : "Optimal";
 
   /* ════════════════ RENDER ════════════════ */
   return (
@@ -607,13 +648,14 @@ export default function QRCodeGenerator() {
         <Link href="/tools" className="mb-4 inline-flex items-center gap-2 text-sm text-[var(--muted)] transition hover:text-[var(--foreground)]">
           <ArrowLeft className="h-4 w-4" /> Back to Tools
         </Link>
-        <div className="mt-2 flex items-center gap-3">
+        <div className="mt-2 flex flex-col gap-4 rounded-[2rem] border border-[var(--line)] bg-gradient-to-br from-[var(--surface-strong)] to-[rgba(141,21,58,.13)] p-6 sm:flex-row sm:items-center sm:p-8">
           <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-[rgba(141,21,58,0.3)] bg-[var(--brand-soft)]">
             <QrCode className="h-5 w-5 text-[var(--brand)]" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-[var(--foreground)] sm:text-3xl">QR Code Generator</h1>
-            <p className="text-sm text-[var(--muted)]">Create your QR code in seconds — free, no sign-up required.</p>
+            <p className="eyebrow mb-1"><Zap className="h-3.5 w-3.5"/> Advanced QR studio</p>
+            <h1 className="text-2xl font-bold tracking-tight text-[var(--foreground)] sm:text-4xl">QR Code Generator</h1>
+            <p className="mt-1 text-sm text-[var(--muted)]">Create branded, print-ready QR codes with live validation and privacy-first processing.</p>
           </div>
         </div>
       </div>
@@ -622,15 +664,15 @@ export default function QRCodeGenerator() {
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
 
         {/* ── Type Sidebar ── */}
-        <div className="panel-strong rounded-[1.75rem] p-3 lg:w-60 lg:flex-shrink-0">
+        <div className="panel-strong overflow-hidden rounded-[1.75rem] p-3 lg:w-64 lg:flex-shrink-0">
           <p className="mb-2 px-2 text-[0.63rem] font-bold uppercase tracking-widest text-[var(--muted)]">QR Type</p>
-          <nav className="flex flex-col gap-0.5">
+          <nav className="flex gap-1 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible lg:pb-0">
             {QR_TYPES.map((t) => {
               const Icon = t.icon;
               const active = activeType === t.id;
               return (
                 <button key={t.id} onClick={() => setActiveType(t.id)}
-                  className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-all ${
+                  className={`group flex min-w-[9.5rem] items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-all lg:w-full lg:min-w-0 ${
                     active ? "bg-[var(--brand-soft)] text-[var(--foreground)]" : "text-[var(--muted)] hover:bg-[rgba(255,255,255,0.05)] hover:text-[var(--foreground)]"
                   }`}>
                   <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg transition"
@@ -684,6 +726,9 @@ export default function QRCodeGenerator() {
                   </div>
                 </div>
                 <FormFields type={activeType} values={values} onChange={handleChange} />
+                <div className={`mt-5 rounded-xl border p-3 text-xs ${invalidUrl ? "border-amber-500/40 bg-amber-500/10 text-amber-300" : "border-[var(--line)] bg-white/[.03] text-[var(--muted)]"}`}>
+                  <div className="flex items-center justify-between gap-3"><span className="flex items-center gap-1.5">{invalidUrl && <AlertTriangle className="h-3.5 w-3.5"/>}{invalidUrl ? "Add https:// so scanners open this as a link." : `${encodedData.length} encoded characters`}</span><b>{density}</b></div>
+                </div>
               </div>
             )}
 
@@ -716,6 +761,15 @@ export default function QRCodeGenerator() {
                       </button>
                     ))}
                   </div>
+                  <div onClick={() => setThemeId("custom")}
+                    className={`mt-3 w-full rounded-xl border p-3 text-left transition ${themeId === "custom" ? "border-[var(--brand)] bg-[var(--brand-soft)]" : "border-[var(--line)]"}`}>
+                    <span className="text-sm font-semibold">Custom colors</span>
+                    <span className="mt-2 flex items-center gap-3">
+                      <input aria-label="QR foreground color" type="color" value={customDark} onChange={(e) => { setCustomDark(e.target.value); setThemeId("custom"); }} className="h-10 w-full cursor-pointer rounded-lg bg-transparent" />
+                      <input aria-label="QR background color" type="color" value={customLight} onChange={(e) => { setCustomLight(e.target.value); setThemeId("custom"); }} className="h-10 w-full cursor-pointer rounded-lg bg-transparent" />
+                    </span>
+                    <span className="mt-1 flex justify-between text-[.65rem] text-[var(--muted)]"><span>Foreground {customDark}</span><span>Background {customLight}</span></span>
+                  </div>
                 </div>
 
                 {/* Size */}
@@ -731,6 +785,7 @@ export default function QRCodeGenerator() {
                     <span>Small</span><span>Medium</span><span>Large</span>
                   </div>
                 </div>
+                <button onClick={resetDesign} className="button-secondary w-full px-4 py-3"><RotateCcw className="h-4 w-4"/> Reset design</button>
 
                 {/* Error correction */}
                 <div>
@@ -810,8 +865,8 @@ export default function QRCodeGenerator() {
         </div>
 
         {/* ── Preview Panel ── */}
-        <div className="panel-strong flex w-full flex-col gap-5 rounded-[1.75rem] p-5 md:w-64 md:flex-shrink-0">
-          <p className="text-[0.63rem] font-bold uppercase tracking-widest text-[var(--muted)]">Preview</p>
+        <div className="panel-strong flex w-full flex-col gap-5 rounded-[1.75rem] p-5 lg:w-80 lg:flex-shrink-0 lg:sticky lg:top-24">
+          <div className="flex items-center justify-between"><p className="text-[0.63rem] font-bold uppercase tracking-widest text-[var(--muted)]">Live preview</p><span className="rounded-full bg-emerald-500/10 px-2 py-1 text-[.6rem] font-bold text-emerald-400">LOCAL ONLY</span></div>
 
           {/* QR image */}
           <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-2xl bg-white shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
@@ -873,9 +928,14 @@ export default function QRCodeGenerator() {
 
           {/* Actions */}
           <div className="flex flex-col gap-2">
+            <Field label="Export resolution">
+              <select className={selectCls} value={exportSize} onChange={(e) => setExportSize(Number(e.target.value))}>
+                <option value={512}>512 px · web</option><option value={1024}>1024 px · high resolution</option><option value={2048}>2048 px · print</option>
+              </select>
+            </Field>
             <button onClick={handleDownload} disabled={!qrDataUrl}
               className="button-primary flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-40">
-              <Download className="h-4 w-4" /> Download PNG
+              <Download className="h-4 w-4" /> Download {exportSize}px PNG
             </button>
             <button onClick={handleCopyImage} disabled={!qrDataUrl}
               className="button-secondary flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm disabled:opacity-40">

@@ -1,37 +1,13 @@
-import { ArrowRight, FileText, QrCode, Wrench } from "lucide-react";
+import { ArrowRight, ExternalLink, Wrench } from "lucide-react";
 import type { Metadata } from "next";
 
 import Link from "next/link";
+import { tools } from "@/lib/tools";
 
 export const metadata: Metadata = {
   title: "Tools | OpenCorex",
-  description: "Explore free, open-source tools built by the OpenCorex community — QR code generator, CV builder, and more.",
+  description: "Explore advanced, privacy-first tools built by the OpenCorex community for documents, media, development, and productivity.",
 };
-
-const tools = [
-  {
-    slug: "qr-code",
-    label: "Utility",
-    title: "QR Code Generator",
-    description:
-      "Generate clean, scannable QR codes from any URL or text. Download as PNG — no sign-up, no tracking, no limits.",
-    icon: QrCode,
-    accent: "#8D153A",
-    href: "/tools/qr-code",
-    available: true,
-  },
-  {
-    slug: "cv-generator",
-    label: "Productivity",
-    title: "CV Generator",
-    description:
-      "Build a professional CV in minutes. Fill in your details, pick a clean layout, and export a print-ready PDF.",
-    icon: FileText,
-    accent: "#205493",
-    href: "/tools/cv-generator",
-    available: true,
-  },
-];
 
 export default function ToolsPage() {
   return (
@@ -64,6 +40,8 @@ export default function ToolsPage() {
               <Link
                 key={tool.slug}
                 href={tool.href}
+                target={tool.external ? "_blank" : undefined}
+                rel={tool.external ? "noreferrer" : undefined}
                 className="group relative flex flex-col overflow-hidden rounded-[1.75rem] border border-[var(--line)] bg-[var(--surface-strong)] p-6 transition-all duration-200 hover:-translate-y-1 hover:border-[var(--line-strong)] hover:shadow-[0_24px_48px_rgba(0,0,0,0.5)]"
                 style={{ boxShadow: "0 12px 32px rgba(0,0,0,0.35)" }}
               >
@@ -105,7 +83,7 @@ export default function ToolsPage() {
                 {/* CTA */}
                 <div className="mt-5 flex items-center gap-1.5 text-sm font-semibold text-[var(--foreground)] transition-colors duration-150 group-hover:text-white">
                   Open tool
-                  <ArrowRight className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-1" />
+                  {tool.external ? <ExternalLink className="h-4 w-4" /> : <ArrowRight className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-1" />}
                 </div>
 
                 {/* Bottom accent line */}
